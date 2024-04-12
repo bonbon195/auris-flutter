@@ -1,4 +1,4 @@
-name: IOS build .ipa
+name: IOS build artefacts
 
 on:
   workflow_dispatch:
@@ -26,8 +26,8 @@ jobs:
         run: flutter test
 
       - name: Build iOS
-        run: flutter build ios --release --no-codesign
-
+        run: flutter build ios --release --no-codesign --dart-define=API_URL=${{ secrets.API_URL }}
+        
       - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
         with:

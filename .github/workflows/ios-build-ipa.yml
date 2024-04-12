@@ -28,15 +28,14 @@ jobs:
         run: flutter test
 
       - name: Build iOS
-        run: flutter build ios --release --no-codesign
-
+        run: flutter build ios --release --no-codesign --dart-define=API_URL=${{ secrets.API_URL }}
+          
       - name: Rename directory
         run: mv build/ios/iphoneos Payload
 
+        # works only on linux
       - name: Zip Payload
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r Payload.ipa Payload
+        run: zip -r Payload.ipa Payload
 
       - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
