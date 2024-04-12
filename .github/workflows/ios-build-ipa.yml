@@ -33,7 +33,6 @@ jobs:
       - name: Rename directory
         run: mv build/ios/iphoneos Payload
 
-  
       - name: Zip Payload
         run: zip -r Payload.ipa Payload
 

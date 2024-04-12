@@ -31,13 +31,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   final player = AudioPlayer();
-
+  final String apiURL = const String.fromEnvironment('API_URL');
   Future<void> _incrementCounter() async {
     setState(() {
       _counter++;
     });
-    await player
-        .play(UrlSource('${const String.fromEnvironment('API_URL')}3.mp3'));
+    await player.play(UrlSource('${apiURL}3.mp3'));
   }
 
   @override
@@ -58,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Text(apiURL),
           ],
         ),
       ),
