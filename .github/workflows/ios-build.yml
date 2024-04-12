@@ -22,3 +22,9 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter build ios --release --no-codesign
+
+      - name: Publish iOS Artefacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-ios
+          path: build/ios/
