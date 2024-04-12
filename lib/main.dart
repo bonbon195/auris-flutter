@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
-    await player.play(UrlSource('${apiURL}3.mp3'));
+    await player.play(UrlSource('$apiURL/3.mp3'));
   }
 
   @override
