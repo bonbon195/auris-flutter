@@ -4,6 +4,7 @@ import 'package:auris/page/check_auth.dart';
 import 'package:auris/page/home.dart';
 import 'package:auris/service/api_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -25,7 +26,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!Platform.isIOS) {
+    if (Platform.isIOS || kDebugMode) {
       return CupertinoApp(
         navigatorKey: navigatorKey,
         title: 'Auris',

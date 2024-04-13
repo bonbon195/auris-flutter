@@ -1,3 +1,6 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:auris/model/track.dart';
+import 'package:auris/service/api_service.dart';
 import 'package:conditional_wrap/conditional_wrap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -19,8 +22,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   void initState() {
     try {
-      // _getTracks();
-      // _updateTracksList();
+      _updateTracksList();
     } catch (e) {}
     super.initState();
   }
@@ -51,19 +53,28 @@ class _FavoritesPageState extends State<FavoritesPage> {
                               ),
                             ),
                           )
-                        : SliverPadding(
-                            padding: const EdgeInsets.only(bottom: 100),
-                            sliver: SliverList.list(
-                              children: [
-                                trackTiles.isEmpty
-                                    ? const Text("Список пуст")
-                                    : CupertinoListSection.insetGrouped(
-                                        topMargin: 0,
-                                        children: trackTiles,
-                                      ),
-                              ],
-                            ),
-                          ),
+                        : trackTiles.isEmpty
+                            ? SliverFillRemaining(
+                                child: Center(
+                                  child: Text(
+                                    "У вас нет избранных треков",
+                                    style: CupertinoTheme.of(context)
+                                        .textTheme
+                                        .textStyle,
+                                  ),
+                                ),
+                              )
+                            : SliverPadding(
+                                padding: const EdgeInsets.only(bottom: 120),
+                                sliver: SliverList.list(
+                                  children: [
+                                    CupertinoListSection.insetGrouped(
+                                      topMargin: 0,
+                                      children: trackTiles,
+                                    ),
+                                  ],
+                                ),
+                              ),
                   ],
                 )));
       },
@@ -77,13 +88,20 @@ class _FavoritesPageState extends State<FavoritesPage> {
             .map((e) => GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () async {
-                    debugPrint(e.$2.fileName);
+                    debugPrint(e.$2.audioSourceFile);
+                    await _onPressed(e.$2);
                   },
                   child: CupertinoListTile(
-                    leading: const Icon(CupertinoIcons.music_note_2,
-                        color: CupertinoColors.activeOrange),
-                    title: Text(e.$2.title ?? ''),
-                    subtitle: Text(e.$2.artist ?? ''),
+                    leading: e.$2.artworkFile == null || e.$2.artworkFile == ''
+                        ? const Icon(CupertinoIcons.music_note_2,
+                            color: CupertinoColors.activeBlue)
+                        : Image.network(ApiService.getTrackArtworkUrl(e.$2)),
+                    title: Text(
+                      e.$2.title ?? '',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    subtitle: Text(e.$2.artist ?? '',
+                        style: CupertinoTheme.of(context).textTheme.textStyle),
                   ),
                 ))
             .toList();
@@ -95,16 +113,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   Future<void> _getTracks() async {
-    setState(() {});
+    List<Track> newTracks = await ApiService.getTracks();
+    setState(() {
+      tracks = newTracks;
+    });
   }
 
-  Future<void> _onPressed() async {}
-}
-
-class Track {
-  var title;
-
-  var artist;
-
-  String? fileName;
+  Future<void> _onPressed(Track track) async {
+    AudioPlayer audioPlayer = AudioPlayer();
+    await audioPlayer.play(UrlSource(ApiService.getTrackSourceUrl(track)));
+  }
 }

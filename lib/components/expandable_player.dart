@@ -16,8 +16,6 @@ class ExpandablePlayer extends StatefulWidget {
 }
 
 class _ExpandablePlayerState extends State<ExpandablePlayer> {
-  String test = "";
-
   @override
   void initState() {
     super.initState();
@@ -72,17 +70,19 @@ class _ExpandablePlayerState extends State<ExpandablePlayer> {
                 child: Image.network(
                     '${const String.fromEnvironment('API_URL')}/api/files/n7bud6ny21sai6o/7fty33til0alhkh/artwork_CkYb2GaqRX.jpg'), // for testing purposes
               ),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Title",
-                      style: TextStyle(fontSize: 14),
+                      style: CupertinoTheme.of(context).textTheme.textStyle
+                        ..copyWith(fontSize: 14),
                     ),
                     Text(
                       "Author",
-                      style: TextStyle(fontSize: 14),
+                      style: CupertinoTheme.of(context).textTheme.textStyle
+                        ..copyWith(fontSize: 14),
                     )
                   ],
                 ),
