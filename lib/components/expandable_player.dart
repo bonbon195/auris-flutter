@@ -7,9 +7,9 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ExpandablePlayer extends StatefulWidget {
   // final Widget? child;
-  final Function(double) setInset;
-  // const ExpandablePlayer({super.key});
-  const ExpandablePlayer({super.key, required this.setInset});
+  // final Function(double) setInset;
+  const ExpandablePlayer({super.key});
+  // const ExpandablePlayer({super.key, required this.setInset});
 
   @override
   State<ExpandablePlayer> createState() => _ExpandablePlayerState();
@@ -52,15 +52,15 @@ class _ExpandablePlayerState extends State<ExpandablePlayer> {
     return SlidingUpPanel(
       onPanelSlide: (position) {},
       onPanelClosed: () {
-        widget.setInset(defaultTargetPlatform == TargetPlatform.iOS ? 70 : 50);
+        // widget.setInset(defaultTargetPlatform == TargetPlatform.iOS ? 70 : 50);
       },
       onPanelOpened: () {
-        widget.setInset(0);
+        // widget.setInset(0);
       },
 
       color: CupertinoColors.secondarySystemFill,
       boxShadow: const [],
-      minHeight: 50,
+      minHeight: 70,
       maxHeight: MediaQuery.of(context).size.height,
       collapsed: Padding(
           padding: const EdgeInsets.all(6),
