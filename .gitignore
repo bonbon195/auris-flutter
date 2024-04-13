@@ -9,6 +9,11 @@
 .history
 .svn/
 migrate_working_dir/
+*.env
+
+# ignore my scripts until I fix them all 
+# TODO: fix scripts
+*.sh
 
 # IntelliJ related
 *.iml

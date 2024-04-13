@@ -1,71 +1,47 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'dart:io';
+import 'package:auris/page/auth.dart';
+import 'package:auris/page/check_auth.dart';
+import 'package:auris/page/home.dart';
+import 'package:auris/service/api_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await ApiService.init();
+
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  App({super.key});
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final Map<String, WidgetBuilder> routes = {
+    '/': (context) => const HomePage(),
+    'auth': (context) => const AuthPage(),
+    'check-auth': (context) => const CheckAuth(),
+  };
+
   @override
   Widget build(BuildContext context) {
+    if (!Platform.isIOS) {
+      return CupertinoApp(
+        navigatorKey: navigatorKey,
+        title: 'Auris',
+        initialRoute: 'check-auth',
+        routes: routes,
+      );
+    }
     return MaterialApp(
-      title: 'Flutter Demo',
+      navigatorKey: navigatorKey,
+      title: 'Auris',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  final player = AudioPlayer();
-  final String apiURL = const String.fromEnvironment('API_URL');
-  Future<void> _incrementCounter() async {
-    setState(() {
-      _counter++;
-    });
-    await player.play(UrlSource('$apiURL/3.mp3'));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            Text(apiURL),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      initialRoute: 'check-auth',
+      routes: routes,
     );
   }
 }

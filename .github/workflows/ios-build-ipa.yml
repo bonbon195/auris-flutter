@@ -36,7 +36,7 @@ jobs:
       - name: Zip Payload
         run: zip -r Payload.ipa Payload
 
-      - name: Publish iOS Artefacts
+      - name: Publish iOS Artifacts
         uses: actions/upload-artifact@v1
         with:
           name: release-ios
