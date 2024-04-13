@@ -15,7 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double _inset = defaultTargetPlatform == TargetPlatform.iOS ? 70 : 50;
+  double _inset =
+      defaultTargetPlatform == TargetPlatform.iOS && kIsWeb ? 70 : 50;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -26,7 +27,9 @@ class _HomePageState extends State<HomePage> {
                     top: BorderSide(color: CupertinoColors.opaqueSeparator),
                     bottom: BorderSide(
                         color: Color.fromARGB(0, 0, 0, 0), width: 20.0)),
-                height: defaultTargetPlatform == TargetPlatform.iOS ? 70 : 50,
+                height: defaultTargetPlatform == TargetPlatform.iOS && kIsWeb
+                    ? 70
+                    : 50,
 
                 // inactiveColor: CupertinoColors.secondarySystemFill,
                 backgroundColor: CupertinoColors.secondarySystemFill,
