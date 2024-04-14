@@ -1,4 +1,4 @@
-name: IOS build artefacts
+name: IOS build artifacts
 
 on:
   workflow_dispatch:
@@ -32,4 +32,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: release-ios
-          path: build/ios/iphoneos/Runner.app
+          path: build/ios
