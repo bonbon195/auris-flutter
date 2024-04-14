@@ -31,15 +31,28 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: CupertinoColors.secondarySystemFill,
               items: const [
                 BottomNavigationBarItem(
-                    label: "Поиск", icon: Icon(CupertinoIcons.search)),
+                    label: "Поиск",
+                    icon: Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: Icon(CupertinoIcons.search))),
                 BottomNavigationBarItem(
                     label: "Избранное",
-                    icon: Icon(CupertinoIcons.square_favorites_alt_fill)),
+                    icon: Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Icon(CupertinoIcons.square_favorites_alt_fill),
+                    )),
                 BottomNavigationBarItem(
-                    label: "Плейлисты",
-                    icon: Icon(CupertinoIcons.music_albums)),
+                  label: "Плейлисты",
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Icon(CupertinoIcons.music_albums),
+                  ),
+                ),
                 BottomNavigationBarItem(
-                    label: "Вся музыка", icon: Icon(CupertinoIcons.settings)),
+                    label: "Настройки",
+                    icon: Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: Icon(CupertinoIcons.settings))),
               ]),
           tabBuilder: (context, index) {
             return Stack(

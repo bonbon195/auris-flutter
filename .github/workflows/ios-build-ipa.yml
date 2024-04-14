@@ -30,6 +30,9 @@ jobs:
       - name: Build iOS
         run: flutter build ios --release --no-codesign --dart-define=API_URL=${{ secrets.API_URL }} --obfuscate --split-debug-info=debug_info
       
+      - name: Strip Bitcode
+        run: xcrun bitcode_strip -r build/ios/iphoneos -o build/ios/iphoneos
+
       - name: Rename directory
         run: mv build/ios/iphoneos Payload
 

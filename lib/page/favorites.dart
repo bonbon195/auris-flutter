@@ -61,8 +61,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
                             padding: const EdgeInsets.only(bottom: 120),
                             sliver: SliverList.list(
                               children: [
-                                CupertinoListSection.insetGrouped(
+                                CupertinoListSection(
                                   topMargin: 0,
+                                  margin: const EdgeInsets.all(0),
                                   children: trackTiles,
                                 ),
                               ],
@@ -82,9 +83,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   behavior: HitTestBehavior.translucent,
                   onTap: () async {
                     debugPrint(e.$2.audioSourceFile);
-                    await _onPressed(e.$2);
+                    await _onTrackPressed(e.$2);
                   },
                   child: CupertinoListTile(
+                    leadingSize: 42,
                     leading: e.$2.artworkFile == null || e.$2.artworkFile == ''
                         ? const Icon(CupertinoIcons.music_note_2,
                             color: CupertinoColors.activeBlue)
@@ -95,6 +97,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     ),
                     subtitle: Text(e.$2.artist ?? '',
                         style: CupertinoTheme.of(context).textTheme.textStyle),
+                    additionalInfo: Text(e.$2.album ?? '',
+                        style: CupertinoTheme.of(context).textTheme.textStyle),
+                    trailing: CupertinoButton(
+                        onPressed: _openTrackDropdown,
+                        child: const Icon(CupertinoIcons.ellipsis)),
                   ),
                 ))
             .toList();
@@ -105,6 +112,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
     _generateTrackListTiles();
   }
 
+  void _openTrackDropdown() {}
+
   Future<void> _getTracks() async {
     List<Track> newTracks = await ApiService.getTracks();
     setState(() {
@@ -112,7 +121,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     });
   }
 
-  Future<void> _onPressed(Track track) async {
+  Future<void> _onTrackPressed(Track track) async {
     if (audioPlayer.playing) audioPlayer.stop();
     audioPlayer.setAudioSource(
         HlsAudioSource(Uri.parse(ApiService.getTrackStreamUrl(track))));
