@@ -17,6 +17,11 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
 
       - name: Check Flutter Version
         run: flutter --version
@@ -31,7 +36,7 @@ jobs:
         run: flutter build ios --release --no-codesign --dart-define=API_URL=${{ secrets.API_URL }} --obfuscate --split-debug-info=debug_info
       
       - name: Strip Bitcode
-        run: xcrun bitcode_strip -r build/ios/iphoneos -o build/ios/iphoneos
+        run: xcrun bitcode_strip -r build/ios/iphoneos/Runner.app -o build/ios/iphoneos/Runner.app
 
       - name: Rename directory
         run: mv build/ios/iphoneos Payload
