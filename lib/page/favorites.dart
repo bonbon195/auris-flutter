@@ -1,11 +1,7 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:auris/model/track.dart';
 import 'package:auris/service/api_service.dart';
-import 'package:conditional_wrap/conditional_wrap.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:web_smooth_scroll/web_smooth_scroll.dart';
+import 'package:just_audio/just_audio.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -15,8 +11,9 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  List<Track>? tracks = List<Track>.empty();
+  List<Track>? tracks;
   List<Widget> trackTiles = List<Widget>.empty();
+  AudioPlayer audioPlayer = AudioPlayer();
   ScrollController controller = ScrollController();
   int currentTrack = 0;
   @override
@@ -34,49 +31,45 @@ class _FavoritesPageState extends State<FavoritesPage> {
         return CupertinoPageScaffold(
             backgroundColor:
                 CupertinoColors.systemGroupedBackground.resolveFrom(context),
-            child: WidgetWrapper(
-                wrapper: (child) => kIsWeb
-                    ? WebSmoothScroll(controller: controller, child: child)
-                    : child,
-                child: CustomScrollView(
-                  controller: controller,
-                  slivers: [
-                    const CupertinoSliverNavigationBar(
-                      backgroundColor: CupertinoColors.secondarySystemFill,
-                      largeTitle: Text("Избранное"),
-                    ),
-                    tracks == null
-                        ? const SliverFillRemaining(
+            child: CustomScrollView(
+              controller: controller,
+              slivers: [
+                const CupertinoSliverNavigationBar(
+                  backgroundColor: CupertinoColors.secondarySystemFill,
+                  largeTitle: Text("Избранное"),
+                ),
+                tracks == null
+                    ? const SliverFillRemaining(
+                        child: Center(
+                          child: CupertinoActivityIndicator(
+                            animating: true,
+                          ),
+                        ),
+                      )
+                    : trackTiles.isEmpty
+                        ? SliverFillRemaining(
                             child: Center(
-                              child: CupertinoActivityIndicator(
-                                animating: true,
+                              child: Text(
+                                "У вас нет избранных треков",
+                                style: CupertinoTheme.of(context)
+                                    .textTheme
+                                    .textStyle,
                               ),
                             ),
                           )
-                        : trackTiles.isEmpty
-                            ? SliverFillRemaining(
-                                child: Center(
-                                  child: Text(
-                                    "У вас нет избранных треков",
-                                    style: CupertinoTheme.of(context)
-                                        .textTheme
-                                        .textStyle,
-                                  ),
+                        : SliverPadding(
+                            padding: const EdgeInsets.only(bottom: 120),
+                            sliver: SliverList.list(
+                              children: [
+                                CupertinoListSection.insetGrouped(
+                                  topMargin: 0,
+                                  children: trackTiles,
                                 ),
-                              )
-                            : SliverPadding(
-                                padding: const EdgeInsets.only(bottom: 120),
-                                sliver: SliverList.list(
-                                  children: [
-                                    CupertinoListSection.insetGrouped(
-                                      topMargin: 0,
-                                      children: trackTiles,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                  ],
-                )));
+                              ],
+                            ),
+                          ),
+              ],
+            ));
       },
     );
   }
@@ -120,7 +113,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   Future<void> _onPressed(Track track) async {
-    AudioPlayer audioPlayer = AudioPlayer();
-    await audioPlayer.play(UrlSource(ApiService.getTrackSourceUrl(track)));
+    if (audioPlayer.playing) audioPlayer.stop();
+    audioPlayer.setAudioSource(
+        HlsAudioSource(Uri.parse(ApiService.getTrackStreamUrl(track))));
+    audioPlayer.play();
   }
 }

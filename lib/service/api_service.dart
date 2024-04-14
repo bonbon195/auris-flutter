@@ -57,6 +57,10 @@ class ApiService {
         .toList());
   }
 
+  static String getTrackStreamUrl(Track track) {
+    return '$_apiURL/api/files/tracks/${track.id}/${track.audioStreamFile}';
+  }
+
   static String getTrackSourceUrl(Track track) {
     return '$_apiURL/api/files/tracks/${track.id}/${track.audioSourceFile}';
   }
